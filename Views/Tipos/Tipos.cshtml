@@ -1,0 +1,348 @@
+﻿
+@{
+    ViewBag.Title = "Tipos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Ventana para consulta -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item active">Tipos</li>
+</ol>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i> Consulta Tipos
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <button class="btn btn-success"
+                        type="button"
+                        onclick="ventana(null)">
+                    Nuevo registro
+                </button>
+            </div>
+        </div>
+
+        <hr />
+        <table id="tabla"
+               class="display responsive"
+               style="width:100%">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Descripcion</th>
+                    <th>Estatus</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Ventana para registrar -->
+<div class="modal fade"
+     id="formRegistra"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1"
+     aria-labelledby="staticBackdropLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"
+                    id="idLabel">
+                    Tipos
+                </h5>
+                <button type="button"
+                        class="close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <input id="txtidtipo"
+                       type="hidden"
+                       value="0" />
+                <form id="formTexto">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="txtdescripcion">Descripcion</label>
+                                <input type="text"
+                                       class="form-control required"
+                                       id="txtdescripcion"
+                                       name="descripcion"
+                                       autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fileImagen">Imagen</label>
+                                <input type="file"
+                                       class="form-control"
+                                       id="fileImagen"
+                                       accept="image/*"
+                                       placeholder=""
+                                       required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="cboEstatus">Estatus</label>
+                                <select id="cboEstatus" class="form-select">
+                                    <option value="1">Activo</option>
+                                    <option value="0">No Activo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-danger"
+                        data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="GuardarRegistro()">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var tabladata;
+
+        $(document).ready(function () {
+                tabladata = $('#tabla').DataTable({
+                    responsive:true,
+                    "ajax": {
+                        "url": '@Url.Action("ConsultaTipos", "Tipos")',
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        {
+                            "data": "ImagenBase64", "render": function (data) {
+                                if (data != null)
+                                    return `<img src="data:image/*;base64,${data}" width="50" height="50"/>`;
+                                else
+                                    return "Sin imagen";
+                            }
+                        },
+
+                        { "data": "Descripcion" },
+                        {
+                            "data": "Estatus", "render": function (data) {
+                                if (data) {
+                                    return '<span class="badge bg-success">Activo</span>'
+                                } else {
+                                    return '<span class="badge bg-danger">No Activo</span>'
+                                }
+                            }
+                        },
+
+                        {
+                            "data": "IdTipo", "render": function (data, type, row, meta) {
+
+                                return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                                    $("<i>").addClass("fas fa-pen")
+                                ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                                +
+                                $("<button>").addClass("btn btn-danger btn-borrar btn-sm ms-2").append(
+                                    $("<i>").addClass("fas fa-trash")
+                                ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                            },
+                            "orderable": false,
+                            "searchable": false,
+                            "width": "90px"
+                        }
+
+                    ],
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+                    }
+                });
+        });
+
+        $(document).on('click', '.btn-editar', function (event) {
+            var json = $(this).data("informacion")
+
+            ventana(json)
+        });
+
+        function ventana(json) {
+            $("#txtidtipo").val(0);
+            $("#txtdescripcion").val("");
+            $("#cboEstatus").val(1);
+
+            if (json != null) {
+
+                $("#txtidtipo").val(json.IdTipo);
+                $("#txtdescripcion").val(json.Descripcion);
+                $("#cboEstatus").val(json.Estatus == true ? 1 : 0);
+            }
+
+            $('#formRegistra').modal('show');
+        }
+
+        $(document).on('click', '.btn-borrar', function (event) {
+            var json = $(this).data("informacion")
+
+            jQuery.ajax({
+                url: '@Url.Action("BorrarTipos", "Tipos")',
+                type: "POST",
+                data: JSON.stringify({ Id: json.IdTipo}),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.resultado) {
+                        tabladata.ajax.reload();
+                    } else {
+                        alert("Ocurrio un error :(")
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                },
+                beforeSend: function () {
+
+                },
+            });
+        });
+
+
+        function GuardarRegistro() {
+            var fileInput = document.getElementById("fileImagen");
+            var file = fileInput.files[0];
+
+            if (file) {
+                console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert("Por favor seleccione un archivo de imagen válido.");
+                    return;
+                }
+
+                // Validate file size (limit to 5MB to prevent crashes)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("El archivo es demasiado grande. Máximo 5MB permitido.");
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                // Add error handling for FileReader
+                reader.onerror = function (error) {
+                    console.error('Error reading file:', error);
+                    alert('Error al leer el archivo. Por favor intente con otro archivo.');
+                };
+
+                reader.onabort = function () {
+                    console.log('File reading was aborted');
+                    alert('La lectura del archivo fue interrumpida.');
+                };
+
+                reader.onload = function (e) {
+                    try {
+                        console.log('File loaded successfully');
+                        var result = e.target.result;
+
+                        // Validate the result
+                        if (!result || typeof result !== 'string') {
+                            throw new Error('Invalid file result');
+                        }
+
+                        // Check if it's a valid data URL
+                        if (!result.startsWith('data:image/')) {
+                            throw new Error('Invalid image format');
+                        }
+
+                        var base64Image = result.split(',')[1];
+
+                        // Validate base64 string
+                        if (!base64Image || base64Image.length === 0) {
+                            throw new Error('Empty base64 string');
+                        }
+
+                        console.log('Base64 conversion successful, length:', base64Image.length);
+                        enviaTipo(base64Image);
+
+                    } catch (error) {
+                        console.error('Error processing image:', error);
+                        alert('Error al procesar la imagen: ' + error.message);
+                    }
+                };
+
+                // Start reading the file
+                try {
+                    reader.readAsDataURL(file);
+                } catch (error) {
+                    console.error('Error starting file read:', error);
+                    alert('Error al iniciar la lectura del archivo.');
+                }
+            } else {
+                enviaTipo(null); // No image selected
+            }
+        }
+
+        function enviaTipo(imagenBase64) {
+            var request = {
+                    IdTipo: $("#txtidtipo").val(),
+                    Descripcion: $("#txtdescripcion").val(),
+                    Estatus: parseInt($("#cboEstatus").val()) == 1,
+                    ImagenBase64: imagenBase64
+            };
+
+            jQuery.ajax({
+                url: '@Url.Action("InsertarTipo", "Tipos")',
+                type: "POST",
+                data: JSON.stringify(request),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data.resultado) {
+                        tabladata.ajax.reload();
+                        $('#formRegistra').modal('hide');
+                    } else {
+                        alert("Ocurrió un error :(");
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+}

@@ -1,0 +1,82 @@
+﻿@model P0006.Models.ViewModels.EditUserViewModels
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+@{
+    ViewBag.Title = "Actualizar Usuario";
+    Layout = "~/Views/Shared/_LayoutApp.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-center">
+                <h2 class="display-6 fw-bold text-success mb-0">Actualizar Usuario</h2>
+                <div class="ms-3">
+                    <span class="badge bg-success">Edición</span>
+                </div>
+            </div>
+            <hr class="border-success mx-auto"  style="max-width: 300px;">
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Información del Usuario</h5>
+                </div>
+                <div class="card-body m-auto text-center">
+                    @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { role = "form", @class = "mx-auto", style = "max-width: 400px;" }))
+                    {
+                        @Html.HiddenFor(d => d.Id)
+
+                        <div class="mb-3 text-start">
+                            @Html.LabelFor(d => d.Nombre, new { @class = "form-label fw-semibold text-success" })
+                            @Html.TextBoxFor(d => d.Nombre, new { @class = "form-control shadow-sm", placeholder = "Ingrese el nombre" })
+                            @Html.ValidationMessage("Nombre", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            @Html.LabelFor(d => d.Usuario, new { @class = "form-label fw-semibold text-success" })
+                            @Html.TextBoxFor(d => d.Usuario, new { @class = "form-control shadow-sm", placeholder = "Ingrese el usuario" })
+                            @Html.ValidationMessage("Usuario", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            @Html.LabelFor(d => d.Email, new { @class = "form-label fw-semibold text-success" })
+                            @Html.TextBoxFor(d => d.Email, new { @class = "form-control shadow-sm", placeholder = "Ingrese el correo electrónico" })
+                            @Html.ValidationMessage("Email", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            @Html.LabelFor(d => d.Password, new { @class = "form-label fw-semibold text-success" })
+                            @Html.PasswordFor(d => d.Password, new { @class = "form-control shadow-sm", placeholder = "Ingrese la contraseña" })
+                            @Html.ValidationMessage("Password", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            @Html.LabelFor(d => d.ConfirmaPassword, new { @class = "form-label fw-semibold text-success" })
+                            @Html.PasswordFor(d => d.ConfirmaPassword, new { @class = "form-control shadow-sm", placeholder = "Confirme la contraseña" })
+                            @Html.ValidationMessage("Confirma Password", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-4 text-start">
+                            @Html.LabelFor(d => d.Edad, new { @class = "form-label fw-semibold text-success" })
+                            @Html.TextBoxFor(d => d.Edad, new { @class = "form-control shadow-sm", placeholder = "Ingrese la edad" })
+                            @Html.ValidationMessage("Edad", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-center">
+                            <input type="submit"
+                                   value="Enviar"
+                                   class="btn btn-success btn-lg shadow-sm px-4" />
+                            <input type="button"
+                                   value="Volver Atrás"
+                                   class="btn btn-secondary btn-lg px-4"
+                                   onclick="document.location.href='@Url.Content("../Query")'" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+﻿@model List<P0006.Models.ViewModels.QueryViewModels>
+@{
+    ViewBag.Title = "Consulta Usuario";
+    Layout = "~/views/shared/_LayoutApp.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <h2 class="display-6 fw-bold text-success mb-0">Consulta de Usuarios</h2>
+                <div class="text-muted">@Model.Count usuarios</div>
+            </div>
+            <hr class="border-primary">
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <input type="submit"
+                       value="Agregar Usuarios"
+                       class="btn btn-success btn-lg shadow-sm"
+                       onclick="document.location.href='@Url.Content("~/User/Add")'" />
+                <input type="button"
+                       value="Volver Atrás"
+                       class="btn btn-secondary btn-lg"
+                       onclick="document.location.href='@Url.Content("~/")'" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Lista de Usuarios</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th class="text-center">ID</th>
+                                        <th>Correo</th>
+                                        <th class="text-center">Edad</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var Objs in Model)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="badge bg-success">@Objs._Id</span>
+                                            </td>
+                                            <td>@Objs._Email</td>
+                                            <td class="text-center">
+                                                <span class="badge bg-success">@Objs._Edad años</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group btn-group-sm">
+                                                    <input type="button"
+                                                           class="btn btn-outline-primary"
+                                                           onclick="jsEdit(@Objs._Id)"
+                                                           value="Editar" />
+                                                    <input type="button"
+                                                           class="btn btn-outline-danger"
+                                                           onclick="jsDelete(@Objs._Id)"
+                                                           value="Borrar" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="text-muted">
+                                <h5>No hay usuarios para mostrar</h5>
+                                <p>Comienza agregando algunos usuarios.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function jsDelete(ID) {
+        if (confirm("Esta seguro de que desea borrar?")) {
+            var url = "@Url.Content("~/user/Delete")" + "/" + ID;
+            $.post(url, function (data) {
+                if (data.trim() == "1") {
+                    // Refresca despues de eliminar
+                    location.reload();
+                }
+                // solo alerta si no se pudo borrar
+                else {
+                    alert("El registro no fue borrado :(");
+                }
+            });
+        }
+    }
+</script>
+<script>
+function jsEdit(id) {
+    var url = '@Url.Content("~/User/Edit/")' + id;
+    document.location.href = url;
+    }
+</script>

@@ -1,0 +1,118 @@
+﻿@model List<P0006.Models.ViewModels.TipdocQueryViewModels>
+@{
+    ViewBag.Title = "Consulta Tipo Documento";
+    Layout = "~/views/shared/_LayoutApp.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <h2 class="display-6 fw-bold text-success mb-0">Consulta Tipo Documento</h2>
+                <div class="text-muted">@Model.Count documentos</div>
+            </div>
+            <hr class="border-primary">
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-2">
+                <input type="submit"
+                       value="Agregar"
+                       class="btn btn-success btn-lg shadow-sm"
+                       onclick="document.location.href='@Url.Content("~/Tipdoc/TipdocAdd")'" />
+                <input type="button"
+                       value="Volver Atrás"
+                       class="btn btn-secondary btn-lg"
+                       onclick="document.location.href='@Url.Content("../")'" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Lista de Tipos de Documento</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th class="text-center">ID</th>
+                                        <th>Tipo</th>
+                                        <th>Descripcion</th>
+                                        <th>Origen</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var Objs in Model)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="badge bg-success">@Objs.Id</span>
+                                            </td>
+                                            <td>@Objs.Tipodoc</td>
+                                            <td>@Objs.Descripcion</td>
+                                            <td>@Objs.Origen</td>
+                                            <td class="text-center">
+                                                <div class="btn-group btn-group-sm">
+                                                    <input type="button"
+                                                           class="btn btn-outline-primary"
+                                                           onclick="jsEdit(@Objs.Id)"
+                                                           value="Editar" />
+                                                    <input type="button"
+                                                           class="btn btn-outline-danger"
+                                                           onclick="jsDelete(@Objs.Id)"
+                                                           value="Borrar" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div class="text-muted">
+                                <h5>No hay tipos de documento para mostrar</h5>
+                                <p>Comienza agregando algunos tipos de documento.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function jsDelete(ID) {
+        if (confirm("Esta seguro de que desea borrar?")) {
+            var url = "@Url.Content("~/Tipdoc/TipdocDelete")" + "/" + ID;
+            $.post(url, function (data) {
+                if (data.trim() == "1") {
+                    // Recarga la pagina para mostrar el query actualizado
+                    location.reload();
+                }
+                // la alerta solo ocurre cuando no se pueda borrar
+                else {
+                    alert("El registro no fue borrado :(");
+                }
+            });
+        }
+    }
+</script>
+<script>
+function jsEdit(id) {
+    var url = '@Url.Content("~/Tipdoc/TipdocEdit/")' + id;
+    document.location.href = url;
+    }
+</script>

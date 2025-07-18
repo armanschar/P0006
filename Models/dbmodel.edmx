@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBMVCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CATEGORIAS">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Estatus" Type="bit" />
+          <Property Name="Imagen" Type="varbinary(max)" />
+          <Property Name="FechaRegistro" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MARCAS">
+          <Key>
+            <PropertyRef Name="IdMarca" />
+          </Key>
+          <Property Name="IdMarca" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Estatus" Type="bit" />
+          <Property Name="FechaRegistro" Type="datetime" />
+          <Property Name="Imagen" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="mSTATUS">
+          <Key>
+            <PropertyRef Name="idStatus" />
+          </Key>
+          <Property Name="idStatus" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TIPDOC">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TIPDOC" Type="nvarchar(max)" />
+          <Property Name="ORIGEN" Type="nvarchar(max)" />
+          <Property Name="DESCRIPCION" Type="nvarchar(max)" />
+          <Property Name="CONTADOR" Type="nvarchar(max)" />
+          <Property Name="CTADEBITO" Type="nvarchar(max)" />
+          <Property Name="CTACREDITO" Type="nvarchar(max)" />
+          <Property Name="ESTATUS" Type="int" />
+        </EntityType>
+        <EntityType Name="TIPOS">
+          <Key>
+            <PropertyRef Name="IDTipo" />
+          </Key>
+          <Property Name="IDTipo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Imagen" Type="image" />
+          <Property Name="Estatus" Type="bit" />
+          <Property Name="FechaRegistro" Type="datetime" />
+        </EntityType>
+        <EntityType Name="USERS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="90" />
+          <Property Name="Usuario" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="Edad" Type="int" />
+          <Property Name="idEstatus" Type="int" />
+        </EntityType>
+        <Association Name="FK_USERS_mSTATUS">
+          <End Role="mSTATUS" Type="Self.mSTATUS" Multiplicity="0..1" />
+          <End Role="USERS" Type="Self.USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mSTATUS">
+              <PropertyRef Name="idStatus" />
+            </Principal>
+            <Dependent Role="USERS">
+              <PropertyRef Name="idEstatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_consultaCategorias" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_consultaMarcas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_consultaTipos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_insertaCategorias" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <Function Name="sp_insertaMarcas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Estatus" Type="bit" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <Function Name="sp_insertaTipos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ModificaCategorias" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCategoria" Type="int" Mode="In" />
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Estatus" Type="bit" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ModificaMarcas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdMarca" Type="int" Mode="In" />
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Estatus" Type="bit" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ModificaTipos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdTipo" Type="int" Mode="In" />
+          <Parameter Name="Descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="Estatus" Type="bit" Mode="In" />
+          <Parameter Name="Imagen" Type="varbinary(max)" Mode="In" />
+          <Parameter Name="Resultado" Type="bit" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="DBMVCModelStoreContainer">
+          <EntitySet Name="CATEGORIAS" EntityType="Self.CATEGORIAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MARCAS" EntityType="Self.MARCAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mSTATUS" EntityType="Self.mSTATUS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TIPDOC" EntityType="Self.TIPDOC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TIPOS" EntityType="Self.TIPOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USERS" EntityType="Self.USERS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_USERS_mSTATUS" Association="Self.FK_USERS_mSTATUS">
+            <End Role="mSTATUS" EntitySet="mSTATUS" />
+            <End Role="USERS" EntitySet="USERS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBMVCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DBMVCEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="mSTATUS" EntityType="DBMVCModel.mSTATU" />
+          <EntitySet Name="TIPDOCs" EntityType="DBMVCModel.TIPDOC" />
+          <EntitySet Name="USERS" EntityType="DBMVCModel.USER" />
+          <AssociationSet Name="FK_USERS_mSTATUS" Association="DBMVCModel.FK_USERS_mSTATUS">
+            <End Role="mSTATU" EntitySet="mSTATUS" />
+            <End Role="USER" EntitySet="USERS" />
+          </AssociationSet>
+          <FunctionImport Name="sp_consultaCategorias" ReturnType="Collection(DBMVCModel.sp_consultaCategorias_Result)" />
+          <FunctionImport Name="sp_consultaMarcas" ReturnType="Collection(DBMVCModel.sp_consultaMarcas_Result)" />
+          <FunctionImport Name="sp_consultaTipos" ReturnType="Collection(DBMVCModel.sp_consultaTipos_Result)" />
+          <FunctionImport Name="sp_insertaCategorias">
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_insertaMarcas">
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Estatus" Mode="In" Type="Boolean" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_insertaTipos">
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ModificaCategorias">
+            <Parameter Name="IdCategoria" Mode="In" Type="Int32" />
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Estatus" Mode="In" Type="Boolean" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ModificaMarcas">
+            <Parameter Name="IdMarca" Mode="In" Type="Int32" />
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Estatus" Mode="In" Type="Boolean" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ModificaTipos">
+            <Parameter Name="IdTipo" Mode="In" Type="Int32" />
+            <Parameter Name="Descripcion" Mode="In" Type="String" />
+            <Parameter Name="Estatus" Mode="In" Type="Boolean" />
+            <Parameter Name="Imagen" Mode="In" Type="Binary" />
+            <Parameter Name="Resultado" Mode="InOut" Type="Boolean" />
+          </FunctionImport>
+          <EntitySet Name="CATEGORIAS" EntityType="DBMVCModel.CATEGORIA" />
+          <EntitySet Name="MARCAS" EntityType="DBMVCModel.MARCA" />
+          <EntitySet Name="TIPOS" EntityType="DBMVCModel.TIPOS" />
+        </EntityContainer>
+        <EntityType Name="mSTATU">
+          <Key>
+            <PropertyRef Name="idStatus" />
+          </Key>
+          <Property Name="idStatus" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="USERS" Relationship="DBMVCModel.FK_USERS_mSTATUS" FromRole="mSTATU" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="TIPDOC">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TIPDOC1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ORIGEN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CONTADOR" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CTADEBITO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CTACREDITO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ESTATUS" Type="Int32" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
+          <Property Name="Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Edad" Type="Int32" />
+          <Property Name="idEstatus" Type="Int32" />
+          <NavigationProperty Name="mSTATU" Relationship="DBMVCModel.FK_USERS_mSTATUS" FromRole="USER" ToRole="mSTATU" />
+        </EntityType>
+        <Association Name="FK_USERS_mSTATUS">
+          <End Type="DBMVCModel.mSTATU" Role="mSTATU" Multiplicity="0..1" />
+          <End Type="DBMVCModel.USER" Role="USER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mSTATU">
+              <PropertyRef Name="idStatus" />
+            </Principal>
+            <Dependent Role="USER">
+              <PropertyRef Name="idEstatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_consultaCategorias_Result">
+          <Property Type="Int32" Name="IdCategoria" Nullable="false" />
+          <Property Type="String" Name="Descripcion" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="Estatus" Nullable="true" />
+          <Property Type="Binary" Name="Imagen" Nullable="true" />
+          <Property Type="DateTime" Name="FechaRegistro" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="sp_consultaMarcas_Result">
+          <Property Type="Int32" Name="IdMarca" Nullable="false" />
+          <Property Type="String" Name="Descripcion" Nullable="true" MaxLength="100" />
+          <Property Type="Boolean" Name="Estatus" Nullable="true" />
+          <Property Type="DateTime" Name="FechaRegistro" Nullable="true" Precision="23" />
+          <Property Type="Binary" Name="Imagen" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_consultaTipos_Result">
+          <Property Type="Int32" Name="IDTipo" Nullable="false" />
+          <Property Type="String" Name="Descripcion" Nullable="true" MaxLength="100" />
+          <Property Type="Binary" Name="Imagen" Nullable="true" MaxLength="Max" />
+          <Property Type="Boolean" Name="Estatus" Nullable="true" />
+          <Property Type="DateTime" Name="FechaRegistro" Nullable="true" Precision="23" />
+        </ComplexType>
+        <EntityType Name="CATEGORIA">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Estatus" Type="Boolean" />
+          <Property Name="Imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="MARCA">
+          <Key>
+            <PropertyRef Name="IdMarca" />
+          </Key>
+          <Property Name="IdMarca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Estatus" Type="Boolean" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+          <Property Name="Imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TIPOS">
+          <Key>
+            <PropertyRef Name="IDTipo" />
+          </Key>
+          <Property Name="IDTipo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Estatus" Type="Boolean" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBMVCModelStoreContainer" CdmEntityContainer="DBMVCEntities">
+          <EntitySetMapping Name="mSTATUS">
+            <EntityTypeMapping TypeName="DBMVCModel.mSTATU">
+              <MappingFragment StoreEntitySet="mSTATUS">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="idStatus" ColumnName="idStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TIPDOCs">
+            <EntityTypeMapping TypeName="DBMVCModel.TIPDOC">
+              <MappingFragment StoreEntitySet="TIPDOC">
+                <ScalarProperty Name="ESTATUS" ColumnName="ESTATUS" />
+                <ScalarProperty Name="CTACREDITO" ColumnName="CTACREDITO" />
+                <ScalarProperty Name="CTADEBITO" ColumnName="CTADEBITO" />
+                <ScalarProperty Name="CONTADOR" ColumnName="CONTADOR" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="ORIGEN" ColumnName="ORIGEN" />
+                <ScalarProperty Name="TIPDOC1" ColumnName="TIPDOC" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERS">
+            <EntityTypeMapping TypeName="DBMVCModel.USER">
+              <MappingFragment StoreEntitySet="USERS">
+                <ScalarProperty Name="idEstatus" ColumnName="idEstatus" />
+                <ScalarProperty Name="Edad" ColumnName="Edad" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_consultaCategorias" FunctionName="DBMVCModel.Store.sp_consultaCategorias">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBMVCModel.sp_consultaCategorias_Result">
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_consultaMarcas" FunctionName="DBMVCModel.Store.sp_consultaMarcas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBMVCModel.sp_consultaMarcas_Result">
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_consultaTipos" FunctionName="DBMVCModel.Store.sp_consultaTipos">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBMVCModel.sp_consultaTipos_Result">
+                <ScalarProperty Name="IDTipo" ColumnName="IDTipo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_insertaCategorias" FunctionName="DBMVCModel.Store.sp_insertaCategorias" />
+          <FunctionImportMapping FunctionImportName="sp_insertaMarcas" FunctionName="DBMVCModel.Store.sp_insertaMarcas" />
+          <FunctionImportMapping FunctionImportName="sp_insertaTipos" FunctionName="DBMVCModel.Store.sp_insertaTipos" />
+          <FunctionImportMapping FunctionImportName="sp_ModificaCategorias" FunctionName="DBMVCModel.Store.sp_ModificaCategorias" />
+          <FunctionImportMapping FunctionImportName="sp_ModificaMarcas" FunctionName="DBMVCModel.Store.sp_ModificaMarcas" />
+          <FunctionImportMapping FunctionImportName="sp_ModificaTipos" FunctionName="DBMVCModel.Store.sp_ModificaTipos" />
+          <EntitySetMapping Name="CATEGORIAS">
+            <EntityTypeMapping TypeName="DBMVCModel.CATEGORIA">
+              <MappingFragment StoreEntitySet="CATEGORIAS">
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MARCAS">
+            <EntityTypeMapping TypeName="DBMVCModel.MARCA">
+              <MappingFragment StoreEntitySet="MARCAS">
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdMarca" ColumnName="IdMarca" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TIPOS">
+            <EntityTypeMapping TypeName="DBMVCModel.TIPOS">
+              <MappingFragment StoreEntitySet="TIPOS">
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IDTipo" ColumnName="IDTipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

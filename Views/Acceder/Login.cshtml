@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/views/shared/_LayoutApp.cshtml";
+}
+
+
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow p-4" style="max-width: 300px; width: 100%;">
+        <h2 class="text-center mb-4">Inicie sesión</h2>
+        <form id="frmAcceder">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <input type="text"
+                       name="usuario"
+                       class="form-control"
+                       placeholder="Ingrese su usuario" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="Ingrese su contraseña" />
+            </div>
+            <div class="d-grid">
+                <input type="submit"
+                       value="Enviar"
+                       class="btn btn-success btn-lg" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function ()
+        {
+            $("#frmAcceder").submit(function (e) //me permite usar la data digitada en la vista
+            {
+                e.preventDefault(); //cancela el evento predeterminado
+                url = "@Url.Content("~/Acceder/Enter")" //creamos una variable con la ruta del metodo en el controlador
+                parametros = $(this).serialize(); //tomamos los valores de los input
+
+                $.post(url, parametros, function (data) //hacemos un post hacia el controlador
+                {
+                    if (data == 1) //si data es == 1, te envia al menu
+                    {
+                        document.location.href = "@Url.Content("~/")"
+                    }
+                    else {
+                        alert(data) //de lo contrario muestra una alerta
+                    }
+                })
+            })
+        })
+    </script>
+}
