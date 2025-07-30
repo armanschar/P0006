@@ -67,10 +67,11 @@ namespace P0006.Metodos
                 try
                 {
                     oCnn.Open();
-                    SqlCommand cmd = new SqlCommand("sp_insertaMarcas", oCnn);
+                    string sInsertar = "INSERT INTO MARCAS (Descripcion, Imagen, Estatus) VALUES (@Descripcion, @Imagen, @Estatus)";
+                    SqlCommand cmd = new SqlCommand(sInsertar, oCnn);
+                    cmd.CommandType = CommandType.Text;
 
-                    cmd.Parameters.AddWithValue("@IdMarca", oMarcas.IdMarca);
-                    cmd.Parameters.AddWithValue("@Descripcion", oMarcas.Descripcion);
+                    cmd.Parameters.AddWithValue("@Descripcion", oMarcas.Descripcion ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@Estatus", oMarcas.Estatus);
 
                     if (!string.IsNullOrEmpty(oMarcas.ImagenBase64))
@@ -90,15 +91,14 @@ namespace P0006.Metodos
                         cmd.Parameters.AddWithValue("@Imagen", DBNull.Value);
                     }
 
-                    cmd.Parameters.Add("@Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.ExecuteNonQuery();
-                    var resultadoParam = cmd.Parameters["@Resultado"].Value;
-                    respuesta = resultadoParam != null && Convert.ToBoolean(resultadoParam);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    respuesta = rowsAffected > 0;
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("SQL Exception: " + ex.Message);
+                    if (ex.InnerException != null)
+                        System.Diagnostics.Debug.WriteLine("Inner: " + ex.InnerException.Message);
                     respuesta = false;
                     throw new Exception("Error in Registrar: " + ex.Message, ex);
                 }

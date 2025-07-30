@@ -73,7 +73,7 @@ namespace P0006.Metodos
 
                         using (SqlCommand cmd = new SqlCommand(sql, oConn))
                         {
-                            cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                            cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
                             cmd.Parameters.AddWithValue("@SecPhoto", i + 1);
                             cmd.Parameters.AddWithValue("@FOTO", fotoBytes);
 
@@ -110,7 +110,7 @@ namespace P0006.Metodos
             {
                 string sql = "DELETE FROM ARTICULOSFOTOS WHERE IDArticulo = @IDArticulo";
                 SqlCommand cmd = new SqlCommand(sql, connection);
-                cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                 int deleted = cmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine($"🗑️ {deleted} fotos anteriores eliminadas");
@@ -138,7 +138,7 @@ namespace P0006.Metodos
                         ORDER BY SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
@@ -174,7 +174,7 @@ namespace P0006.Metodos
                 string sql = "DELETE FROM ARTICULOSFOTOS WHERE IDCliente = @IDCliente AND IDArticulo = @IDArticulo";
                 SqlCommand cmd = new SqlCommand(sql, connection);
                 cmd.Parameters.AddWithValue("@IDCliente", idCliente);
-                cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                 int deleted = cmd.ExecuteNonQuery();
                 System.Diagnostics.Debug.WriteLine($"🗑️ {deleted} fotos anteriores eliminadas");
@@ -216,11 +216,11 @@ namespace P0006.Metodos
                 {
                     string sql = @"
                         DELETE FROM ARTICULOSFOTOS 
-                        WHERE IDCliente = @IDCliente AND IDArticulo = @IDArticulo AND SecPhoto = @SecPhoto";
+                        WHERE IdCliente = @IDCliente AND IdArticulo = @IdArticulo AND SecPhoto = @SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oConn);
-                    cmd.Parameters.AddWithValue("@IDCliente", idCliente);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
                     cmd.Parameters.AddWithValue("@SecPhoto", secPhoto);
 
                     oConn.Open();
@@ -247,7 +247,7 @@ namespace P0006.Metodos
                 {
                     string sql = "SELECT COUNT(*) FROM ARTICULOSFOTOS WHERE IDArticulo = @IDArticulo";
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     cantidad = (int)cmd.ExecuteScalar();
@@ -277,12 +277,12 @@ namespace P0006.Metodos
                         string sql = @"
                             UPDATE ARTICULOSFOTOS 
                             SET SecPhoto = @NuevoOrden
-                            WHERE IDCliente = @IDCliente AND IDArticulo = @IDArticulo AND SecPhoto = @OrdenAntiguo";
+                            WHERE IdCliente = @IdCliente AND IdArticulo = @IdArticulo AND SecPhoto = @OrdenAntiguo";
 
                         SqlCommand cmd = new SqlCommand(sql, oConn, transaction);
                         cmd.Parameters.AddWithValue("@NuevoOrden", i + 1);
                         cmd.Parameters.AddWithValue("@IDCliente", idCliente);
-                        cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                        cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
                         cmd.Parameters.AddWithValue("@OrdenAntiguo", nuevoOrden[i]);
 
                         cmd.ExecuteNonQuery();
@@ -316,11 +316,11 @@ namespace P0006.Metodos
                     string sql = @"
                 SELECT TOP 1 FOTO
                 FROM ARTICULOSFOTOS 
-                WHERE IDArticulo = @IDArticulo
+                WHERE IdArticulo = @IdArticulo
                 ORDER BY SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     byte[] foto = cmd.ExecuteScalar() as byte[];
@@ -360,7 +360,7 @@ namespace P0006.Metodos
                 ORDER BY SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
@@ -399,11 +399,11 @@ namespace P0006.Metodos
                     string sql = @"
                 SELECT TOP 1 FOTO
                 FROM ARTICULOSFOTOS 
-                WHERE IDArticulo = @IDArticulo
+                WHERE IdArticulo = @IdArticulo
                 ORDER BY SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     byte[] foto = cmd.ExecuteScalar() as byte[];
@@ -439,11 +439,11 @@ namespace P0006.Metodos
                     string sql = @"
                 SELECT FOTO
                 FROM ARTICULOSFOTOS 
-                WHERE IDArticulo = @IDArticulo
+                WHERE IdArticulo = @IdArticulo
                 ORDER BY SecPhoto";
 
                     SqlCommand cmd = new SqlCommand(sql, oCnn);
-                    cmd.Parameters.AddWithValue("@IDArticulo", idArticulo);
+                    cmd.Parameters.AddWithValue("@IdArticulo", idArticulo);
 
                     oCnn.Open();
                     SqlDataReader dr = cmd.ExecuteReader();

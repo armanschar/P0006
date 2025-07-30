@@ -145,6 +145,9 @@
     <Compile Include="Metodos\CategoriasMetodos.cs" />
     <Compile Include="Metodos\Connection.cs" />
     <Compile Include="Metodos\MarcasMetodos.cs" />
+    <Compile Include="Models\ArticuloFoto.cs">
+      <DependentUpon>dbmodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CATEGORIA.cs">
       <DependentUpon>dbmodel.tt</DependentUpon>
     </Compile>

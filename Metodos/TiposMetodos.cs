@@ -64,15 +64,26 @@ namespace P0006.Metodos
             bool respuesta = false;
             using (SqlConnection oCnn = new SqlConnection(Conexion.Bd))
             {
-                try 
-                { 
+                try
+                {
+                    oCnn.Open();
                     SqlCommand cmd = new SqlCommand("sp_insertaTipos", oCnn);
-                    cmd.Parameters.AddWithValue("@Descripcion", oTipo.Descripcion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Add parameters with null validation like in Marcas
+                    cmd.Parameters.AddWithValue("@Descripcion", oTipo.Descripcion ?? (object)DBNull.Value);
 
                     if (!string.IsNullOrEmpty(oTipo.ImagenBase64))
                     {
-                        byte[] imagenBytes = Convert.FromBase64String(oTipo.ImagenBase64);
-                        cmd.Parameters.AddWithValue("@Imagen", imagenBytes);
+                        try
+                        {
+                            byte[] imagenBytes = Convert.FromBase64String(oTipo.ImagenBase64);
+                            cmd.Parameters.AddWithValue("@Imagen", imagenBytes);
+                        }
+                        catch (FormatException ex)
+                        {
+                            throw new Exception("La imagen enviada no es un base64 válido.", ex);
+                        }
                     }
                     else
                     {
@@ -80,14 +91,16 @@ namespace P0006.Metodos
                     }
 
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
                     cmd.ExecuteNonQuery();
                     respuesta = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("SQL Exception: " + ex.Message);
+                    if (ex.InnerException != null)
+                        System.Diagnostics.Debug.WriteLine("Inner: " + ex.InnerException.Message);
                     respuesta = false;
+                    throw new Exception("Error in Registrar: " + ex.Message, ex);
                 }
             }
             return respuesta;

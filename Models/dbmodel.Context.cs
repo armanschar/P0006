@@ -34,6 +34,7 @@ namespace P0006.Models
         public DbSet<CATEGORIA> CATEGORIAS { get; set; }
         public DbSet<MARCA> MARCAS { get; set; }
         public DbSet<TIPOS> TIPOS { get; set; }
+        public DbSet<ArticuloFoto> ArticuloFotos { get; set; }
     
         public virtual ObjectResult<sp_consultaCategorias_Result> sp_consultaCategorias()
         {

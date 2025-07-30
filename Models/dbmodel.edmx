@@ -5,6 +5,19 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DBMVCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DBMVC.dbo.ArticuloFotos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ArticuloFotos">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+            <PropertyRef Name="IdArtículo" />
+            <PropertyRef Name="SecPhoto" />
+          </Key>
+          <Property Name="IdCliente" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdArtículo" Type="int" Nullable="false" />
+          <Property Name="SecPhoto" Type="int" Nullable="false" />
+          <Property Name="FOTO" Type="image" />
+        </EntityType>
         <EntityType Name="CATEGORIAS">
           <Key>
             <PropertyRef Name="IdCategoria" />
@@ -126,6 +139,14 @@
           <EntitySet Name="TIPDOC" EntityType="Self.TIPDOC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TIPOS" EntityType="Self.TIPOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USERS" EntityType="Self.USERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ArticuloFotos" EntityType="Self.ArticuloFotos" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[ArticuloFotos].[IdCliente] AS [IdCliente], 
+[ArticuloFotos].[IdArtículo] AS [IdArtículo], 
+[ArticuloFotos].[SecPhoto] AS [SecPhoto], 
+[ArticuloFotos].[FOTO] AS [FOTO]
+FROM [dbo].[ArticuloFotos] AS [ArticuloFotos]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_USERS_mSTATUS" Association="Self.FK_USERS_mSTATUS">
             <End Role="mSTATUS" EntitySet="mSTATUS" />
             <End Role="USERS" EntitySet="USERS" />
@@ -186,6 +207,7 @@
           <EntitySet Name="CATEGORIAS" EntityType="DBMVCModel.CATEGORIA" />
           <EntitySet Name="MARCAS" EntityType="DBMVCModel.MARCA" />
           <EntitySet Name="TIPOS" EntityType="DBMVCModel.TIPOS" />
+          <EntitySet Name="ArticuloFotos" EntityType="DBMVCModel.ArticuloFoto" />
         </EntityContainer>
         <EntityType Name="mSTATU">
           <Key>
@@ -283,6 +305,17 @@
           <Property Name="Imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Estatus" Type="Boolean" />
           <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ArticuloFoto">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+            <PropertyRef Name="IdArtículo" />
+            <PropertyRef Name="SecPhoto" />
+          </Key>
+          <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdArtículo" Type="Int32" Nullable="false" />
+          <Property Name="SecPhoto" Type="Int32" Nullable="false" />
+          <Property Name="FOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -394,6 +427,16 @@
                 <ScalarProperty Name="Imagen" ColumnName="Imagen" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
                 <ScalarProperty Name="IDTipo" ColumnName="IDTipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArticuloFotos">
+            <EntityTypeMapping TypeName="DBMVCModel.ArticuloFoto">
+              <MappingFragment StoreEntitySet="ArticuloFotos">
+                <ScalarProperty Name="FOTO" ColumnName="FOTO" />
+                <ScalarProperty Name="SecPhoto" ColumnName="SecPhoto" />
+                <ScalarProperty Name="IdArtículo" ColumnName="IdArtículo" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -66,28 +66,41 @@ namespace P0006.Metodos
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("sp_insertaCategorias", oCnn);
-                    cmd.Parameters.AddWithValue("@Descripcion", oCategoria.Descripcion);
+                    oCnn.Open();
+                    string sInsertar = "INSERT INTO CATEGORIAS (Descripcion, Imagen, Estatus) VALUES (@Descripcion, @Imagen, @Estatus)";
+                    SqlCommand cmd = new SqlCommand(sInsertar, oCnn);
+                    cmd.CommandType = CommandType.Text;
+
+                    cmd.Parameters.AddWithValue("@Descripcion", oCategoria.Descripcion ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Estatus", oCategoria.Estatus);
 
                     if (!string.IsNullOrEmpty(oCategoria.ImagenBase64))
                     {
-                        byte[] imagenBytes = Convert.FromBase64String(oCategoria.ImagenBase64);
-                        cmd.Parameters.AddWithValue("@Imagen", imagenBytes);
+                        try
+                        {
+                            byte[] imagenBytes = Convert.FromBase64String(oCategoria.ImagenBase64);
+                            cmd.Parameters.AddWithValue("@Imagen", imagenBytes);
+                        }
+                        catch (FormatException ex)
+                        {
+                            throw new Exception("La imagen enviada no es un base64 válido.", ex);
+                        }
                     }
                     else
                     {
                         cmd.Parameters.AddWithValue("@Imagen", DBNull.Value);
                     }
 
-                    cmd.Parameters.Add("@Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.ExecuteNonQuery();
-                    respuesta = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    respuesta = rowsAffected > 0; ;
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("SQL Exception: " + ex.Message);
+                    if (ex.InnerException != null)
+                        System.Diagnostics.Debug.WriteLine("Inner: " + ex.InnerException.Message);
                     respuesta = false;
+                    throw new Exception("Error in Registrar: " + ex.Message, ex);
                 }
             }
             return respuesta;
@@ -101,7 +114,7 @@ namespace P0006.Metodos
                 {
                     oCnn.Open();
 
-                    SqlCommand cmd = new SqlCommand("@sp_ModificaCategorias", oCnn);
+                    SqlCommand cmd = new SqlCommand("sp_ModificaCategorias", oCnn);
                     cmd.Parameters.AddWithValue("@IdCategoria", oCategoria.IdCategoria);
                     cmd.Parameters.AddWithValue("@Descripcion", oCategoria.Descripcion);
 
@@ -127,6 +140,7 @@ namespace P0006.Metodos
                 catch (Exception ex)
                 {
                     respuesta = false;
+                    throw new Exception("Error in Modificar: " + ex.Message, ex);
                 }
             }
             return respuesta;
